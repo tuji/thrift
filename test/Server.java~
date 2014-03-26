@@ -1,0 +1,52 @@
+import sys
+import org.apache.thrift.server.TServer;
+import org.apache.thrift.server.TServer.Args;
+import org.apache.thrift.server.TSimpleServer;
+import org.apache.thrift.server.TThreadPoolServer;
+import org.apache.thrift.transport.TSSLTransportFactory;
+import org.apache.thrift.transport.TServerSocket;
+import org.apache.thrift.transport.TServerTransport;
+import org.apache.thrift.transport.TSSLTransportFactory.TSSLTransportParameters;
+
+// Generated code
+//import tutorial.*;
+//import shared.*;
+
+import java.util.HashMap;
+
+
+public class Server {
+ 
+    class ArithmeticServiceImpl implements ArithmeticService.Iface {
+ 
+    public long add(int num1, int num2) throws TException {
+        return num1 + num2;
+    }
+ 
+    public long multiply(int num1, int num2) throws TException {
+        return num1 * num2;
+    }
+ 
+}
+
+    private void start() {
+        try {
+            TServerSocket serverTransport = new TServerSocket(7911);
+ 
+            ArithmeticService.Processor processor = new ArithmeticService.Processor(new ArithmeticServiceImpl());
+ 
+            TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).
+                    processor(processor));
+            System.out.println("Starting server on port 7911 ...");
+            server.serve();
+        } catch (TTransportException e) {
+            e.printStackTrace();
+        }
+    }
+ 
+    public static void main(String[] args) {
+        Server srv = new Server();
+        srv.start();
+    }
+ 
+}
